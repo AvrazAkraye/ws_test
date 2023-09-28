@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Socket.IO Example</title>
+</head>
+
+<body>
+    <div>
+        <h1>Socket.IO Example</h1>
+        <div>
+            <input type="text" id="messageInput" placeholder="Type a message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div id="messageContainer">
+            <h2>Messages:</h2>
+            <ul id="messageList"></ul>
+        </div>
+    </div>
+
+    <!-- Include Socket.IO client library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Connect to the Socket.IO server
+
+        // Function to send a message to the server
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            socket.emit('message', message);
+            messageInput.value = ''; // Clear the input field
+        }
+
+        // Function to add a message to the message list
+        function addMessage(message) {
+            const messageList = document.getElementById('messageList');
+            const listItem = document.createElement('li');
+            listItem.textContent = message;
+            messageList.appendChild(listItem);
+        }
+
+        // Listen for incoming messages from the server
+        socket.on('message', (message) => {
+            addMessage(message);
+        });
+
+        // Log a message when the Socket.IO connection is established
+        socket.on('connect', () => {
+            console.log('Connected to the Socket.IO server');
+        });
+
+        // Log a message when the Socket.IO connection is closed
+        socket.on('disconnect', () => {
+            console.log('Disconnected from the Socket.IO server');
+        });
+    </script>
+</body>
+
+</html>
